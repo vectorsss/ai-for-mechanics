@@ -1,4 +1,4 @@
-# AI for Mechanics: companion code for the lecture series
+# AI for Mechanics: companion code for the seminar series
 
 Neural networks for problems in solid mechanics. Each task is a small,
 self-contained problem with its own folder:
@@ -20,3 +20,7 @@ pip install -r requirements.txt   # numpy, scipy, matplotlib, torch
 Then follow the README in the task folder, e.g.
 `cd 01-cnn-composite-stress && python fem.py`. Folders are numbered in
 lecture order: `NN-<method>-<problem>`.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
