@@ -25,6 +25,7 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 
 E_M, E_F, NU, EPS_BAR = 1.0, 10.0, 0.3, 0.01
+HERE = Path(__file__).resolve().parent
 
 
 # ---------------------------------------------------------------- geometry
@@ -139,11 +140,11 @@ def main():
     X, Y = make_dataset(num=1000, n=n, seed=0)
     t = time.perf_counter() - t
 
-    out = Path("data")
+    out = HERE / "data"
     out.mkdir(exist_ok=True)
     np.savez_compressed(out / "taskA.npz", x_train=X[:800], y_train=Y[:800],
                         x_test=X[800:], y_test=Y[800:])
-    print(f"1000 layouts on a {n} x {n} mesh in {t:.1f} s -> data/taskA.npz")
+    print(f"1000 layouts on a {n} x {n} mesh in {t:.1f} s -> {out / 'taskA.npz'}")
     print(f"fibre fraction {np.mean(X):.2f}, s: mean {Y.mean():.2f}, max {Y.max():.2f}")
 
 

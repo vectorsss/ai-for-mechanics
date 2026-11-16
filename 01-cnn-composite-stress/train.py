@@ -4,7 +4,7 @@
     python train.py unet --epochs 20
     python train.py unet --device cuda   # or mps on Apple silicon
 
-Writes checkpoints/<name>.pt and results/<name>.json.
+Writes checkpoints/<name>.pt and results/<name>.json in this folder.
 """
 import argparse
 import json
@@ -15,6 +15,8 @@ import numpy as np
 import torch
 
 from models import MODELS, count_weights
+
+HERE = Path(__file__).resolve().parent
 
 
 def rel_l2(pred, y):
@@ -57,7 +59,7 @@ def main():
     args = ap.parse_args()
 
     torch.manual_seed(args.seed)
-    d = np.load("data/taskA.npz")
+    d = np.load(HERE / "data" / "taskA.npz")
     Xtr, Ytr, Xte, Yte = (torch.from_numpy(d[k]).to(args.device) for k in
                           ("x_train", "y_train", "x_test", "y_test"))
 
@@ -82,10 +84,10 @@ def main():
            "epochs": args.epochs, "seed": args.seed, "device": args.device,
            "train_error": history["train"][-1], "test_error": history["test"][-1],
            "train_seconds": round(t, 1), "history": history}
-    Path("checkpoints").mkdir(exist_ok=True)
-    Path("results").mkdir(exist_ok=True)
-    torch.save(model.cpu().state_dict(), f"checkpoints/{args.model}.pt")
-    Path(f"results/{args.model}.json").write_text(json.dumps(res, indent=1))
+    (HERE / "checkpoints").mkdir(exist_ok=True)
+    (HERE / "results").mkdir(exist_ok=True)
+    torch.save(model.cpu().state_dict(), HERE / "checkpoints" / f"{args.model}.pt")
+    (HERE / "results" / f"{args.model}.json").write_text(json.dumps(res, indent=1))
     print(f"done in {t:.0f} s: train error {res['train_error']:.1%}, "
           f"test error {res['test_error']:.1%}")
 
