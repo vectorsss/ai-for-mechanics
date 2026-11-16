@@ -6,6 +6,7 @@ fig_example.png   one test layout and its FEM stress map
 fig_data.png      three test layouts and their FEM stress maps
 fig_pred.png      one test layout: FEM and the predictions of the trained models
 fig_curves.png    training and test error per epoch
+map_input.png, map_stress.png   the bare maps of one layout (for diagrams)
 Models that have not been trained yet are skipped.
 """
 import json
@@ -42,6 +43,13 @@ def fig_example(X, Y, i=0):
     fig.colorbar(im, ax=axs[1], shrink=0.9)
     fig.savefig(OUT / "fig_example.png")
     plt.close(fig)
+
+
+def fig_maps(X, Y, i=0):
+    """Input and FEM stress map of one layout as bare images, no axes."""
+    up = np.ones((8, 8))                       # 32 x 32 -> 256 x 256, sharp cells
+    plt.imsave(OUT / "map_input.png", np.kron(X[i], up)[::-1], cmap="Greys", vmin=0, vmax=1)
+    plt.imsave(OUT / "map_stress.png", np.kron(Y[i], up)[::-1], cmap="viridis", vmin=0)
 
 
 def fig_data(X, Y, idx=(0, 1, 2)):
@@ -95,6 +103,7 @@ def main():
     d = np.load(HERE / "data" / "taskA.npz")
     X, Y = d["x_test"], d["y_test"]
     fig_example(X, Y)
+    fig_maps(X, Y)
     fig_data(X, Y)
 
     models, results = {}, {}
